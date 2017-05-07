@@ -1,0 +1,56 @@
+---
+title: "Into to R Lab"
+text: "Introduction to Statistical Learning with Application in R"
+output: html_notebook
+---
+
+```{r}
+x=seq(1,10)
+y=x
+f=outer(x,y,function(x,y)cos(y)/(1+x^2))
+image(x,y,f, nlevels=45,add=T)
+persp(x,y,f, theta = 120, phi = 20)
+
+```
+
+### Reading Data
+```{r}
+# Load ISLR Dataset
+library(ISLR)
+ISLR::Auto
+
+# Check Variable Names 
+names(Auto)
+
+# Attach stores the variable names from the given input, negating the need for 'Auto$' before defining the inputs to be used later (in this case cylinders and mpg)
+attach(Auto)
+
+plot(cylinders, mpg)
+
+```
+```{r}
+# Cylinders only has a small selection of possible values, so converting it to a factor is a better way to deal with it
+cylinders <- as.factor(cylinders)
+
+# Becuase we have changed cylinders to a factor, the plot function now produces a box plot instead of a scatterplot. There are also examples of others options when using plot
+plot(cylinders, mpg, col="Red")
+```
+
+```{r}
+# Plot a histogram, col=n sets the colour and breaks is the number of buckets
+hist(mpg, col = 4, breaks = 20)
+```
+```{r}
+# Pairs creates a scatterplot matrix for every variable in a given data set
+pairs(Auto)
+
+# Only generate pairs for specific variables
+pairs(~mpg + displacement + horsepower + weight + acceleration)
+```
+
+
+```{r}
+# Shows summary statistics for all variables
+summary(Auto)
+```
+
