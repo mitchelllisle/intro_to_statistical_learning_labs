@@ -1,0 +1,75 @@
+---
+title: "R Notebook"
+output: html_notebook
+---
+
+```{r}
+library(ISLR)
+library(dplyr)
+
+College
+```
+
+```{r}
+summary(College)
+```
+
+```{r}
+pairs(College)
+
+pairs(College[1:10])
+
+```
+
+```{r}
+plot(College$Outstate, College$Private)
+```
+
+```{r}
+College <- mutate(College, Elite = as.factor(if_else(College$Top10perc > 50, "Yes", "No")))
+summary(College$Elite)
+```
+
+```{r}
+plot(College$Outstate, College$Elite)
+```
+
+```{r}
+hist(College$Apps, breaks = 100)
+hist(College$Accept, breaks = 50)
+```
+
+```{r}
+Auto
+```
+
+```{r}
+range(Auto$mpg)
+range(Auto$cylinders)
+summary(Auto)
+sd(Auto$acceleration)
+```
+
+```{r}
+plot(Auto$cylinders, Auto$mpg)
+plot(Auto$cylinders, Auto$horsepower)
+plot(Auto$cylinders, Auto$weight)
+plot(Auto$year, Auto$weight)
+plot(Auto$weight, Auto$acceleration)
+plot(Auto$horsepower, Auto$mpg)
+```
+
+```{r}
+library(MASS)
+
+Boston
+```
+
+```{r}
+pairs(Boston[1:5])
+```
+
+```{r}
+
+```
+
