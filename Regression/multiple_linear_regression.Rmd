@@ -1,0 +1,24 @@
+---
+title: "Multiple Linear Regression"
+output: html_notebook
+editor_options: 
+  chunk_output_type: inline
+---
+```{r}
+library(MASS)
+attach(Boston)
+```
+
+### Boston Housing Dataset
+```{r}
+head(Boston)
+```
+
+```{r}
+lm.multifit <- lm(medv~lstat+age)
+```
+
+```{r}
+summary(lm.multifit)
+```
+

@@ -1,0 +1,119 @@
+---
+title: "Simple Linear Regression"
+output: html_notebook
+editor_options: 
+  chunk_output_type: inline
+---
+```{r}
+library(MASS)
+```
+
+### Boston Housing Dataset
+```{r}
+head(Boston)
+```
+
+Run the Linear Regression using the `lm` function
+```{r}
+
+lm.fit = lm(Boston$medv~Boston$lstat)
+
+```
+##### Quick Explanations of the output of `Summary()`
+Residuals: The difference between the fitted values of the linear regression, vs the actuals. Being close to 0 is ideal.
+Coefficients: The coeffients are two unknown constants that represent the `intercept` and `slope`. If we want to predict x given y, we need to find the intercept and slope such that the fitted line is as close the the actual data points in the data set.
+
+ - **Coefficient Estimate**: This contains two rows. First is the Intercept. The intercept (often labeled the constant) is the expected mean value of Y when all X=0. If X never = 0, then the intercept has no intrinsic meaning. Second row is the slope. Or in this example the affect lstat has on medv. The result can be interpreted as, for every drop in medv, the lstat goes down -0.95. 
+ 
+ - **Coefficient Std. Error**: The coefficient Standard Error measures the average amount that the coefficient estimates vary from the actual average value of our response variable.
+ 
+ - **Coefficient t-value**: The coefficient t-value is a measure of how many standard deviations our coefficient estimate is far away from 0. We want it to be far away from zero as this would indicate we could reject the null hypothesis - that is, we could declare a relationship between speed and distance exist. In our example, the t-statistic values are relatively far away from zero and are large relative to the standard error, which could indicate a relationship exists. In general, t-values are also used to compute p-values.
+ 
+ - **Coefficient PR(>|t|)**: The Pr(>|t|) acronym found in the model output relates to the probability of observing any value equal or larger than |t|. A small p-value indicates that it is unlikely we will observe a relationship between the predictor (lstat) and response (medv) variables due to chance. Typically, a p-value of 5% or less is a good cut-off point. In our model example, the p-values are very close to zero. Note the ‘signif. Codes’ associated to each estimate. Three stars (or asterisks) represent a highly significant p-value. Consequently, a small p-value for the intercept and the slope indicates that we can reject the null hypothesis which allows us to conclude that there is a relationship between lstat and medv.
+ 
+- **Residual Standard Error**: This is a measure of the quality of our fit. Theoretically, every linear model is assumed to contain an error term E. The residual error is the average amount that the response, medv, will deviate from the true regression line. There is also a notion of 'degrees of freedom'. Simplistically, degrees of freedom are the number of data points that went into the estimation of the parameters used after taking into account these parameters (restriction). In our case, we had 504 data points and two parameters (intercept and slope).
+
+- **Multiple R-Squared, Adjusted R-Squared**: R-Squared provdes another measure of how well the model is fitting the actual data. It always lies between 0 and 1 - 0 meaning the predicted values do not fit the actual well, 1 meaning it fits perfectly. R-Squared in this example is 0.5441, or 54% of the variance in medv can be explained by lstat. In multiple regression settings, the R2R2 will always increase as more variables are included in the model. That’s why the adjusted R2R2 is the preferred measure as it adjusts for the number of variables considered. WARNING: While a high R-squared indicates good correlation, correlation does not always imply causation.
+
+ - **F-Statistic**: F-statistic is a good indicator of whether there is a relationship between our predictor and the response variables. The further the F-statistic is from 1 the better it is. F-Statistics generally can't be compared between models predicting different things, as this value will differ depending on the number of observations. In our example, a value of 601 is pretty good, given we have 504 observations. 
+
+ - **P-Value**: In the majority of analyses, a P-Value of of 0.05 is used as the cutoff for significance. If the p-value is less than 0.05, we reject the null hypothesis that there's no difference between the means and conclude that a significant difference does exist. In our case we have a very small p-value, indicating significance. 
+ 
+```{r}
+lm.fit
+summary(lm.fit)
+```
+
+## Outputs of a linear regression
+#### Coefficients
+
+The coefficient is a measure of the strength and direction of a linear relationship. It is always between -1 and +1. Interpretation of a coefficient is as below: 
+ 
+ - Exactly –1. A perfect downhill (negative) linear relationship
+ 
+ - –0.70. A strong downhill (negative) linear relationship
+ 
+ - –0.50. A moderate downhill (negative) relationship
+ 
+ - –0.30. A weak downhill (negative) linear relationship
+ 
+ - 0. No linear relationship
+ 
+ - +0.30. A weak uphill (positive) linear relationship
+ 
+ - +0.50. A moderate uphill (positive) relationship
+ 
+ - +0.70. A strong uphill (positive) linear relationship
+ 
+ - Exactly +1. A perfect uphill (positive) linear relationship
+ 
+
+```{r}
+# Print the computed coefficient
+lm.fit$coefficients
+
+```
+
+The coefficient for the `medv` and `lstat` variabes in the Boston data has a coefficient of `-0.95` meaning it has a fairly strong negative correlation. If we plot it below you can see this trend.
+
+```{r}
+mlr_scatter(medv, lstat, x_label = "medv", y_label = "lstat")
+```
+
+#### Residuals
+The residual is the difference between the actual value, and the predicted value. If the points in a residual plot are randomly dispersed around the horizontal axis, a linear regression model is appropriate for the data; otherwise, a non-linear model is more appropriate.
+
+Interpreting this results is done by plotting a residuals vs fitted scatter plot.It is a scatter plot of residuals on the y axis and fitted values (estimated responses) on the x axis. The plot is used to detect non-linearity, unequal error variances, and outliers.
+
+Interpreting these charts can be somewhat subjective, but you are generally looking for some randomness around the 0 point line. If there are too many clusters in one area, you could argue that the regression is non-linear, meaning a linear regression doesn't makes sense for this question. 
+
+```{r}
+head(lm.fit$residuals)
+```
+```{r}
+mlr_scatter(lm.fit$fitted.values, lm.fit$residuals, x_label = "medv~lstat fitted values", y_label = "Residuals", colour = "#EA6532")
+```
+
+
+#### Confidence Intervals
+Confidence intervals illustrate the lower and upper bounds of where the data sits. E.g. the bottom 2.5% fit within -1.02 and the top 95% fit within -0.87.
+```{r}
+confint(lm.fit)
+```
+
+CANT FIGURE OUT HOW TO PASS NEW DATA TO PREDICTION
+```{r}
+predict(lm.fit, data.frame(test=c(10,5,4)))
+```
+
+```{r}
+plot(Boston$lstat, Boston$medv) +
+abline(lm.fit, col="red")
+```
+
+
+```{r}
+graphics::plot(lm.fit)
+```
+
+
